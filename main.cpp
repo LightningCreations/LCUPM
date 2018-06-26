@@ -1,7 +1,7 @@
 #include <ncurses.h>
 
 void help() {
-  wprintw("Usage: (WIP)"); // Rdr: I'll get back to this later.
+  wprintw(stdscr, "Usage: (WIP)"); // Rdr: I'll get back to this later.
 }
 
 int main(int argc, char** argv) {
@@ -10,8 +10,8 @@ int main(int argc, char** argv) {
   cbreak();
   
   // Initialize colors:
-  initPair(1, COLOR_WHITE, COLOR_BLACK); // Standard color
-  initPair(2, COLOR_RED, COLOR_BLACK); // Error color
+  init_pair(1, COLOR_WHITE, COLOR_BLACK); // Standard color
+  init_pair(2, COLOR_RED, COLOR_BLACK); // Error color
   
   attron(COLOR_PAIR(1));
   wprintw(stdscr, "Lightning Creations Unified Package Manager\n");
