@@ -14,14 +14,14 @@ int main(int argc, char** argv) {
   initPair(2, COLOR_RED, COLOR_BLACK); // Error color
   
   attron(COLOR_PAIR(1));
-  wprintw("Lightning Creations Unified Package Manager\n", stdscr);
-  wprintw("by InfernoDeity and Rdrpenguin\n");
-  wprintw("Version 1.0\n");
+  wprintw(stdscr, "Lightning Creations Unified Package Manager\n");
+  wprintw(stdscr, "by InfernoDeity and Rdrpenguin\n");
+  wprintw(stdscr, "Version 1.0\n");
   wrefresh(stdscr);
   
   if(argc == 1) {
     attron(COLOR_PAIR(2));
-    wprintw("ERROR! Not enough arguments!\n");
+    wprintw(stdscr, "ERROR! Not enough arguments!\n");
     help();
     return 1;
   }
