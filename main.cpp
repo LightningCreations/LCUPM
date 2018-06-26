@@ -6,6 +6,7 @@ void help() {
 
 int main(int argc, char** argv) {
   initscr();
+  start_color();
   cbreak();
   
   // Initialize colors:
