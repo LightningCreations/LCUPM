@@ -13,22 +13,54 @@ class Hashable{
 public:
 	virtual int hashCode()const = 0;
 };
-
-int32_t hashcode(int);
-int32_t hashcode(char);
-int32_t hashcode(short);
-int32_t hashcode(int64_t);
-int32_t hashcode(unsigned char);
-int32_t hashcode(unsigned short);
-int32_t hashcode(unsigned int);
-int32_t hashcode(uint64_t);
-int32_t hashcode(float);
-int32_t hashcode(double);
-int32_t hashcode(void*);
-int32_t hashcode(nullptr_t);
-int32_t hashcode(char*);
-int32_t hashcode(std::string);
-int32_t hashcode(std::type_info&);
+  
+constexpr int32_t hashcode(int i){
+	return i;
+}
+constexpr int32_t hashcode(char c){
+	return int(c)|(c&0x80?0xffffff00:0);
+}
+constexpr int32_t hashcode(short s){
+	return int(s)|(s&0x8000?0xffff0000:0);
+}
+constexpr int32_t hashcode(int64_t i){
+	return int(i)^int(i>>32);
+}
+constexpr int32_t hashcode(unsigned char c){
+	return int(c)&0xff;
+}
+constexpr int32_t hashcode(unsigned short s){
+	return int(s)&0xffff;
+}
+constexpr int32_t hashcode(unsigned int i){
+	return int(i);
+}
+constexpr int32_t hashcode(uint64_t i){
+	return int(i)^int(i>>32);
+}
+constexpr int32_t hashcode(float f){
+	union{
+		float f1;
+		int bits;
+	} u = {f};
+	return u.bits;
+}
+constexpr int32_t hashcode(double d){
+	union{
+		double d1;
+		uint64_t bits;
+	}u = {d};
+	return hashcode(u.bits);
+}
+constexpr int32_t hashcode(void* v){
+	return int32_t(v);
+}
+constexpr int32_t hashcode(nullptr_t n){
+	return 0;
+}
+int32_t hashcode(const char*);
+int32_t hashcode(const std::string&);
+int32_t hashcode(const std::type_info&);
 
 using std::vector;
 
@@ -54,7 +86,7 @@ template<typename T,size_t size>  int32_t hashcode(const array<T,size>& a){
 
 template<typename T,size_t size> int32_t hashcode(const T(&a)[size]){
 	int32_t h = 0;
-	for(auto&& val:a){
+	for(const T& val:a){
 		h*=31;
 		h+=hashcode(val);
 	}
@@ -94,16 +126,19 @@ using std::map;
 
 template<typename K,typename V> int32_t hashcode(const map<K,V>& m){
 	int32_t hash = 0;
-	for(pair<K,V>& p:m){
+	for(const pair<K,V>& p:m){
 		hash*=31;
 		hash+=hashcode(p);
 	}
 	return hash;
 }
 
-template<typename E> int32_t hashcode(typename std::enable_if<std::is_enum<E>::value,E>::type e){
-	decltype(auto) val = reinterpret_cast<typename std::underlying_type<E>::type>(e);
-	return hashcode<decltype(val)>(val);
+template<typename E> constexpr int32_t hashcode(typename std::enable_if<std::is_enum<E>::value,E>::type e){
+	union{
+		E e1;
+		typename std::underlying_type<E>::type bits;
+	}u = {e};
+	return hashcode(u.bits);
 }
 
 #endif
