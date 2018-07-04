@@ -7,6 +7,8 @@ Package location (The path online to find your package. Example: `"gcc.gnu.org/g
 
 Build script (Used when building from source is required on the target platform. Example: `"gcc-3.1.2/build.sh"`)
 
+Build dependencies (Dependencies to get when building from source. Example: `["cc", "c++", "make"]`)
+
 Version string (The version that will be displayed to the user. Example: `"3.1.2r23"`)
 
 Version number (The version used to sequentially identify versions of your program. Example: `324134`)
@@ -25,6 +27,7 @@ Post-install (A script to be run after installing your package. Recommended to b
         "description":"The GNU C++ Compiler",
         "location":"gcc.gnu.org/gcc-3.1.2r23-lcupm.tar.gz",
         "build":"gcc-3.1.2/build.sh",
+        "build-depends":["cc", "c++", "make"],
         "version-str":"3.1.2r23",
         "version-num":324134,
         "depends":["gcc","man-g++"],
