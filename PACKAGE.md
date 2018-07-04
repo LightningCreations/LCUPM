@@ -13,6 +13,8 @@ Version number (The version used to sequentially identify versions of your progr
 
 ## Optional fields
 
+Description (Will be shown to the user with `lcupm info`. Example: `"The GNU C++ Compiler"`)
+
 Dependencies (These packages will be installed before yours, and their dependencies will be installed first too if they have any. Example: `["gcc", "man-g++"]`)
 
 Post-install (A script to be run after installing your package. Recommended to be in Lua. Example: `"gcc-3.1.2/test.lua"`)
@@ -20,6 +22,7 @@ Post-install (A script to be run after installing your package. Recommended to b
 ## Example of full package identification file
     {
         "name":"gcc",
+        "description":"The GNU C++ Compiler",
         "location":"gcc.gnu.org/gcc-3.1.2r23-lcupm.tar.gz",
         "build":"gcc-3.1.2/build.sh",
         "version-str":"3.1.2r23",
