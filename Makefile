@@ -2,11 +2,11 @@ CXX := g++
 
 all: lcupm
 
-lcupm: main.o 
-	$(CXX) -g -lncurses main.o
+lcupm: main.o
+	$(CXX) -g -o lcupm main.o -lcurl
 
 main.o: main.cpp
-	$(CXX) -g -c -lncurses main.cpp
+	$(CXX) -g -c main.cpp
 
 run: lcupm
 	./lcupm
