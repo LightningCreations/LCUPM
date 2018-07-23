@@ -1,25 +1,31 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <string>
 
-#include <curl/curl.h>
+#include <Text.hpp>
+#include <Errors.hpp>
 
-#define NORMAL "\e[0m"
-#define GREEN "\e[1;38;2;0;255;0m"
-#define RED "\e[1;38;2;255;0;0m"
+using namespace std::string_literals;
+
 
 void quit() {
-	exit(0);
+	throw exit_program();
 }
 
-void help(char* name) {
+void help(Terminal& t,char* name) {
+	/*
 	printf(NORMAL);
 	printf("Usage:\n");
 	printf("\t%s fetch <packagename>\n", name);
 	printf("\t%s help\n", name);
+	*/
+	t.print(Color::Reset)
+	.print("Usage"s,endline)
+	//.print(tab,name,"fetch <packagename>",endline)
+	.print(tab,name," help"s,endline);
 }
-
+/*
 void helpFetch(char* name) {
 	printf(NORMAL);
 	printf("Usage (fetch):\n");
@@ -46,35 +52,49 @@ void startDownload(char* url, char* resultName) {
 		fclose(fp);
 	}
 }
+*/
 
 int main(int argc, char** argv) {
-	printf(GREEN);
-	printf("Lightning Creations Unified Package Manager\n");
-	printf(NORMAL);
-	printf("by InfernoDeity and Rdrpenguin\n");
-	printf("Version 1.0\n");
-
-	curl_global_init(CURL_GLOBAL_ALL);
-
-	if(argc == 1) {
-		printf(RED);
-		printf("ERROR! Not enough arguments!\n");
-		help(argv[0]);
-		quit();
-	}
-
-	if(strcmp("fetch", argv[1]) == 0) {
-		if(argc == 2) {
+	Terminal t;
+	try{
+		/*
+		printf(GREEN);
+		printf("Lightning Creations Unified Package Manager\n");
+		printf(NORMAL);
+		printf("by InfernoDeity and Rdrpenguin\n");
+		printf("Version 1.0\n");
+		*/
+		
+		/*
+		curl_global_init(CURL_GLOBAL_ALL);
+		*/
+		if(argc == 1) {
+			/*
 			printf(RED);
 			printf("ERROR! Not enough arguments!\n");
-			helpFetch(argv[0]);
-			quit();
+			*/
+			t.print(foreground<Color::RED>,"ERROR! Not enough arguments!"s,endline);
+			help(t,argv[0]);
+			t.print("Press any key to exit>"s,endline).wait();
+			return 0;
 		}
-		printf("Fetching %s...\n", argv[2]);
-		startDownload(argv[2], (char*)"./download");
-	} else if(strcmp("help", argv[1]) == 0) {
-		help(argv[0]);
+		
+		/*
+		if(strcmp("fetch", argv[1]) == 0) {
+			if(argc == 2) {
+				printf(RED);
+				printf("ERROR! Not enough arguments!\n");
+				helpFetch(argv[0]);
+				return 0;
+			}
+			printf("Fetching %s...\n", argv[2]);
+			startDownload(argv[2], (char*)"./download");
+		} else*/ if(strcmp("help", argv[1]) == 0) {
+			help(t,argv[0]);
+		}
+	}catch(exit_program e){
+		return e.getCode();
 	}
-
-	quit();
+	
+	return 0;
 }

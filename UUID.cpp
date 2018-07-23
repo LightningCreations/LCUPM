@@ -10,7 +10,7 @@
 
 #include <SHA256.hpp>
 
-extern const int32_t hashPrime;
+const int32_t hashPrime = 31;
 
 
 ShadowRandom uuidRandom;

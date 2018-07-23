@@ -2,7 +2,7 @@
 #include "JTime.hpp"
 
 
-const extern int32_t hashPrime;
+const int32_t hashPrime(31);
 
 const int NANO_BOUND = 1000000000;
 const int NANOS_PER_SECOND = 1000000000;

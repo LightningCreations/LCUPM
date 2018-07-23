@@ -1,15 +1,31 @@
 CXX := g++
 
+SOURCEFILES := main.cpp Terminal.cpp TextComponent.cpp
+SOURCEFILES += Random.cpp ShadowRandom.cpp UUID.cpp
+SOURCEFILES += Version.cpp JTime.cpp SHA256.cpp StringHelper.cpp
+
+LIBCURL := ./Libs/libcurl.so
+
+CURLINCLUDE := ./curl-master/include
+
+INCLUDEDIRS := -I./ -I$(CURLINCLUDE)
+LINKERFILES := -L$(LIBCURL)
+
+FLAGS := -g  -fpermissive
+
 all: lcupm
 
-lcupm: main.o
-	$(CXX) -g -o lcupm main.o -lcurl
+lcupm: $(SOURCEFILES)
+	$(CXX) $(INCLUDEDIRS) $(LINKERFILES) $(FLAGS) -o lcupm $(SOURCEFILES)
 
-main.o: main.cpp
-	$(CXX) -g -c main.cpp
+
 
 run: lcupm
 	./lcupm
 
 debug: lcupm
 	gdb lcupm
+
+clean:
+	rm -f lcupm
+	

@@ -10,8 +10,7 @@
 #include <memory>
 #include <chrono>
 
-
-extern const int hashPrime(31);
+const int hashPrime(31);
 
 
 
