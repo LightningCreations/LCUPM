@@ -1,6 +1,6 @@
 #ifndef __Wrappers_hpp_2018_06_19_13_46
 #define __Wrappers_hpp_2018_06_19_13_46
-#include <utiltiy>
+#include <utility>
 #include <type_traits>
 #include <typeinfo>
 #include <typeindex>
@@ -10,7 +10,7 @@ private:
     PolymorphicWrapper(const PolymorphicWrapper&)=delete;
     PolymorphicWrapper& operator=(const PolymorphicWrapper&)=delete;
 public:
-    PolymorphicWrapper(PolymorphicWrapper&& r):val(std::exhcange(r.val,nullptr)){}
+    PolymorphicWrapper(PolymorphicWrapper&& r):val(std::exchange(r.val,nullptr)){}
     ~PolymorphicWrapper(){
         if(val!=nullptr)
             delete val;
