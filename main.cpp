@@ -5,6 +5,7 @@
 
 #include <Text.hpp>
 #include <Errors.hpp>
+#include <curl/curl.h>
 
 using namespace std::string_literals;
 
@@ -22,14 +23,15 @@ void help(Terminal& t,char* name) {
 	*/
 	t.print(Color::Reset)
 	.print("Usage"s,endline)
-	//.print(tab,name,"fetch <packagename>",endline)
+	.print(tab,name,"fetch <packagename>",endline)
 	.print(tab,name," help"s,endline);
 }
-/*
-void helpFetch(char* name) {
-	printf(NORMAL);
-	printf("Usage (fetch):\n");
-	printf("\t%s fetch <packagename>\n", name);
+
+
+void helpFetch(Terminal& t,char* name) {
+	t.print(Color::Reset)
+	.print("Usage (fetch)"s,endline)
+	.print(tab,name,"fetch <packagename>",endline);
 }
 
 size_t writeFile(void* ptr, size_t size, size_t nmemb, FILE *stream) {
@@ -52,10 +54,11 @@ void startDownload(char* url, char* resultName) {
 		fclose(fp);
 	}
 }
-*/
+
 
 int main(int argc, char** argv) {
 	Terminal t;
+	Version current(1,0);
 	try{
 		/*
 		printf(GREEN);
@@ -64,10 +67,13 @@ int main(int argc, char** argv) {
 		printf("by InfernoDeity and Rdrpenguin\n");
 		printf("Version 1.0\n");
 		*/
+		t.print(foreground<Color::GREEN>)
+		.print("Lighting Creations Unified Package Manager",endline)
+		.print(Color::Reset)
+		.print("by InfernoDeity and Rdrpenguin",endline)
+		.print("Version ",current,endline);
 		
-		/*
 		curl_global_init(CURL_GLOBAL_ALL);
-		*/
 		if(argc == 1) {
 			/*
 			printf(RED);
@@ -79,17 +85,16 @@ int main(int argc, char** argv) {
 			return 0;
 		}
 		
-		/*
 		if(strcmp("fetch", argv[1]) == 0) {
 			if(argc == 2) {
-				printf(RED);
-				printf("ERROR! Not enough arguments!\n");
-				helpFetch(argv[0]);
+				t.print(foreground<Color::RED>,"ERROR! Not enough arguments!"s,endline);
+				helpFetch(t,argv[0]);
+				t.print("Press any key to exit>"s,endline).wait();
 				return 0;
 			}
 			printf("Fetching %s...\n", argv[2]);
 			startDownload(argv[2], (char*)"./download");
-		} else*/ if(strcmp("help", argv[1]) == 0) {
+		} else if(strcmp("help", argv[1]) == 0) {
 			help(t,argv[0]);
 		}
 	}catch(exit_program e){
