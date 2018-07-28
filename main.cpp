@@ -5,7 +5,8 @@
 
 #include <Text.hpp>
 #include <Errors.hpp>
-#include <curl/curl.h>
+#include <Curl.hpp>
+#include <IOWrapper.hpp>
 
 using namespace std::string_literals;
 
@@ -40,7 +41,7 @@ size_t writeFile(void* ptr, size_t size, size_t nmemb, FILE *stream) {
 }
 
 void startDownload(char* url, char* resultName) {
-	CURL *curl;
+	/*CURL *curl;
 	FILE *fp;
 	CURLcode res;
 	curl = curl_easy_init();
@@ -52,13 +53,18 @@ void startDownload(char* url, char* resultName) {
 		res = curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
 		fclose(fp);
-	}
+	}*/
+	FileOutputStream strm(resultName);
+	Curl target(strm);
+	target.setURL(url);
+	target.fetch();
 }
 
 
 int main(int argc, char** argv) {
 	Terminal t;
 	Version current(1,0);
+	CurlGlobal instance;
 	try{
 		/*
 		printf(GREEN);
@@ -73,7 +79,7 @@ int main(int argc, char** argv) {
 		.print("by InfernoDeity and Rdrpenguin",endline)
 		.print("Version ",current,endline);
 		
-		curl_global_init(CURL_GLOBAL_ALL);
+		
 		if(argc == 1) {
 			/*
 			printf(RED);
