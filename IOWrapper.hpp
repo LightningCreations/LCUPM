@@ -5,6 +5,11 @@
 #include <string>
 #include <Version.hpp>
 #include <UUID.hpp>
+#include <stdexcept>
+class FileNotFoundException:public std::exception{
+public:
+    const char* what()const noexcept(true) override;
+};
 
 struct little_endian_t{
 public:

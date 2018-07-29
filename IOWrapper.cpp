@@ -1,9 +1,12 @@
 #include <IOWrapper.hpp>
 #include <string>
 
-FileInputStream::FileInputStream(FILE* f):underlying(f){}
-FileInputStream::FileInputStream(const char* c):underlying(fopen(c,"rb")){}
-FileInputStream::FileInputStream(const std::string& str):underlying(fopen(str.c_str(),"r")){}
+FileInputStream::FileInputStream(FILE* f):underlying(f){
+    if(f==NULL||f==nullptr)
+        throw FileNotFoundException();
+}
+FileInputStream::FileInputStream(const char* c):FileInputStream(fopen(c,"rb")){}
+FileInputStream::FileInputStream(const std::string& str):FileInputStream(fopen(str.c_str(),"r")){}
 FileInputStream::~FileInputStream(){
     if(underlying!=nullptr&&underlying!=NULL)
         fclose(underlying);
@@ -117,11 +120,14 @@ DataInputStream& DataInputStream::operator>>(UUID& u){
     return *this;
 }
 
-FileOutputStream::FileOutputStream(FILE* f):underlying(f){}
-FileOutputStream::FileOutputStream(const char* c):underlying(fopen(c,"wb")){}
-FileOutputStream::FileOutputStream(const std::string& str):underlying(fopen(str.c_str(),"wb")){}
-FileOutputStream::FileOutputStream(const char* c,append_t):underlying(fopen(c,"ab")){}
-FileOutputStream::FileOutputStream(const std::string& str,append_t):underlying(fopen(str.c_str(),"ab")){}
+FileOutputStream::FileOutputStream(FILE* f):underlying(f){
+    if(underlying==NULL||underlying==nullptr)
+        throw FileNotFoundException();
+}
+FileOutputStream::FileOutputStream(const char* c):FileOutputStream(fopen(c,"wb")){}
+FileOutputStream::FileOutputStream(const std::string& str):FileOutputStream(fopen(str.c_str(),"wb")){}
+FileOutputStream::FileOutputStream(const char* c,append_t):FileOutputStream(fopen(c,"ab")){}
+FileOutputStream::FileOutputStream(const std::string& str,append_t):FileOutputStream(fopen(str.c_str(),"ab")){}
 FileOutputStream::FileOutputStream(FileOutputStream&& f):underlying(std::exchange(f.underlying,nullptr)){}
 FileOutputStream::~FileOutputStream(){
     if(underlying!=NULL&&underlying!=nullptr)
@@ -140,3 +146,97 @@ void FileOutputStream::write(uint8_t u){
     write(&u,1);
 }
 
+DataOutputStream::DataOutputStream(OutputStream& o):underlying(&o),little(false){}
+DataOutputStream::DataOutputStream(OutputStream& o,little_endian_t):underlying(&o),little(true){}
+size_t DataOutputStream::write(const void* v,size_t s){
+    return underlying->write(v,s);
+}
+void DataOutputStream::write(uint8_t u){
+    underlying->write(u);
+}
+void DataOutputStream::writeByte(int8_t i){
+    write(i);
+}
+void DataOutputStream::writeShort(int16_t i){
+    if(little){
+        write(i);
+        write(i>>8);
+    }
+    else{
+        write(i>>8);
+        write(i);
+    }
+}
+void DataOutputStream::writeInt(int i){
+    if(little){
+        write(i);
+        write(i>>8);
+        write(i>>16);
+        write(i>>24);
+    }else{
+        write(i>>24);
+        write(i>>16);
+        write(i>>8);
+        write(i);
+    }
+}
+void DataOutputStream::writeLong(int64_t l){
+    if(little){
+        writeInt(l);
+        writeInt(l>>32);
+    }else{
+        writeInt(l>>32);
+        writeInt(l);
+    }
+}
+void DataOutputStream::writeString(const std::string& s){
+    writeShort(s.length());
+    for(char c:s)
+        write(c);
+}
+DataOutputStream& DataOutputStream::operator<<(uint8_t i){
+    write(i);
+    return *this;
+}
+DataOutputStream& DataOutputStream::operator<<(int8_t i){
+    write(i);
+    return *this;
+}
+DataOutputStream& DataOutputStream::operator<<(uint16_t l){
+    writeShort(l);
+    return *this;
+}
+DataOutputStream& DataOutputStream::operator<<(int16_t l){
+    writeShort(l);
+    return *this;
+}
+DataOutputStream& DataOutputStream::operator<<(uint32_t i){
+    writeInt(i);
+    return *this;
+}
+DataOutputStream& DataOutputStream::operator<<(int32_t i){
+    writeInt(i);
+    return *this;
+}
+DataOutputStream& DataOutputStream::operator<<(uint64_t l){
+    writeLong(l);
+    return *this;
+}
+DataOutputStream& DataOutputStream::operator<<(int64_t l){
+    writeLong(l);
+    return *this;
+}
+DataOutputStream& DataOutputStream::operator<<(const std::string& s){
+    writeString(s);
+    return *this;
+}
+DataOutputStream& DataOutputStream::operator<<(const UUID& u){
+    return (*this) << u.getHigh() << u.getLow();
+}
+DataOutputStream& DataOutputStream::operator<<(Version v){
+    return (*this) << uint8_t(v.getMajor()-1) << uint8_t(v.getMinor());
+}
+
+const char* FileNotFoundException::what()const noexcept(true){
+    return "File could not be found or opened";
+}
