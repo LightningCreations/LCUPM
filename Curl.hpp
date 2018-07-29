@@ -3,6 +3,13 @@
 #include <curl/curl.h>
 #include <IOWrapper.hpp>
 #include <string>
+#include <stdexcept>
+
+class CurlException:public std::exception{
+public:
+    const char* what()const noexcept(true);
+};
+
 class CurlGlobal{
     CurlGlobal(const CurlGlobal&)=delete;
     CurlGlobal(CurlGlobal&&)=delete;
@@ -25,7 +32,7 @@ public:
     Curl(OutputStream&);
     ~Curl();
     void setURL(const std::string&);
-    CURLcode fetch();
+    void fetch();
 };
 
 #endif

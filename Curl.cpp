@@ -2,7 +2,9 @@
 #include <utility>
 
 CurlGlobal::CurlGlobal(){
-    curl_global_init(CURL_GLOBAL_ALL);
+    if(curl_global_init(CURL_GLOBAL_ALL)!=0){
+        throw CurlException();
+    }
 }
 
 CurlGlobal::~CurlGlobal(){
@@ -22,6 +24,8 @@ Curl::~Curl(){
 
 Curl::Curl(OutputStream& target):writeTo(&target){
     curl = curl_easy_init();
+    if(curl==NULL)
+        throw CurlException();
     curl_easy_setopt(curl,CURLOPT_WRITEDATA,writeTo);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeF);
 }
@@ -30,6 +34,11 @@ void Curl::setURL(const std::string& url){
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 }
 
-CURLcode Curl::fetch(){
-    return curl_easy_perform(curl);
+void Curl::fetch(){
+    if(curl_easy_perform(curl)!=0)
+        throw CurlException();
+}
+
+const char* CurlException::what()const noexcept(true){
+    return "Curl Returned an error condition";
 }
