@@ -24,7 +24,7 @@ void help(Terminal& t,char* name) {
 	*/
 	t.print(Color::Reset)
 	.print("Usage"s,endline)
-	.print(tab,name,"fetch <packagename>",endline)
+	.print(tab,name," fetch <packagename>"s,endline)
 	.print(tab,name," help"s,endline);
 }
 
@@ -34,13 +34,14 @@ void helpFetch(Terminal& t,char* name) {
 	.print("Usage (fetch)"s,endline)
 	.print(tab,name,"fetch <packagename>",endline);
 }
-
+/*
 size_t writeFile(void* ptr, size_t size, size_t nmemb, FILE *stream) {
 	size_t written = fwrite(ptr, size, nmemb, stream);
 	return written;
 }
+*/
 
-void startDownload(char* url, char* resultName) {
+void startDownload(const char* url,const char* resultName) {
 	/*CURL *curl;
 	FILE *fp;
 	CURLcode res;
@@ -63,7 +64,7 @@ void startDownload(char* url, char* resultName) {
 
 int main(int argc, char** argv) {
 	Terminal t;
-	Version current(1,0);
+	Version current(1,1);
 	CurlGlobal instance;
 	try{
 		/*
@@ -99,10 +100,11 @@ int main(int argc, char** argv) {
 				return 0;
 			}
 			printf("Fetching %s...\n", argv[2]);
-			startDownload(argv[2], (char*)"./download");
+			startDownload(argv[2], "./download");
 		} else if(strcmp("help", argv[1]) == 0) {
 			help(t,argv[0]);
 		}
+		t.wait().clear();
 	}catch(exit_program e){
 		return e.getCode();
 	}

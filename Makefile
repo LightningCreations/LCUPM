@@ -12,7 +12,7 @@ CURLINCLUDE := ./curl-master/include
 INCLUDEDIRS := -I./ -I$(CURLINCLUDE)
 LINKERFILES := -l$(LIBCURL)
 
-PRGARGS := help
+PRGARGS := fetch http://horton.com/consulting/portfolio/dwbt/bouncer/media/sample.wav
 
 FLAGS := -g  -fpermissive
 
