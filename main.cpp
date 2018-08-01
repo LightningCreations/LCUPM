@@ -100,8 +100,9 @@ int main(int argc, char** argv) {
 				t.print("Press any key to exit>"s,endline).wait();
 				return 0;
 			}
-			printf("Fetching %s...\n", argv[2]);
+			t.print("Fetching"s, argv[2],"...",endline);
 			startDownload(argv[2], "./download");
+			t.print("Download Complete"s,endline);
 		} else if(strcmp("help", argv[1]) == 0) {
 			help(t,argv[0]);
 		}
