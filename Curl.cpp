@@ -1,9 +1,14 @@
 #include <Curl.hpp>
 #include <utility>
 
+using namespace std::string_literals;
+
+CurlException::CurlException(const std::string& str):srcFunction(str){}
+CurlException::CurlException(std::string&& str):srcFunction(str){} 
+
 CurlGlobal::CurlGlobal(){
     if(curl_global_init(CURL_GLOBAL_ALL)!=0){
-        throw CurlException();
+        throw CurlException("Curl Error thrown (CurlGlobal::{ctor})"s);
     }
 }
 
@@ -25,7 +30,7 @@ Curl::~Curl(){
 Curl::Curl(OutputStream& target):writeTo(&target){
     curl = curl_easy_init();
     if(curl==NULL)
-        throw CurlException();
+        throw CurlException("Curl Raised Error (Curl::{ctor})");
     curl_easy_setopt(curl,CURLOPT_WRITEDATA,writeTo);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeF);
 }
@@ -36,9 +41,9 @@ void Curl::setURL(const std::string& url){
 
 void Curl::fetch(){
     if(curl_easy_perform(curl)!=0)
-        throw CurlException();
+        throw CurlException("Curl Raised Error (Curl::fetch)");
 }
 
 const char* CurlException::what()const noexcept(true){
-    return "Curl Returned an error condition";
+    return srcFunction.c_str();
 }

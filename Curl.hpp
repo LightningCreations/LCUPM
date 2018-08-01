@@ -6,7 +6,10 @@
 #include <stdexcept>
 
 class CurlException:public std::exception{
+    std::string srcFunction;
 public:
+    CurlException(const std::string&);
+    CurlException(std::string&&);
     const char* what()const noexcept(true);
 };
 
