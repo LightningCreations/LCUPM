@@ -55,9 +55,10 @@ void startDownload(const char* url,const char* resultName) {
 		curl_easy_cleanup(curl);
 		fclose(fp);
 	}*/
+	std::string target(url);
 	FileOutputStream strm(resultName);
 	Curl target(strm);
-	target.setURL(url);
+	target.setURL(target);
 	target.fetch();
 }
 
