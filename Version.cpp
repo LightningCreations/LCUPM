@@ -72,7 +72,7 @@ istream& operator >>(istream& i,Version& v){
 }
 
 string Version::toString()const{
-	return to_string(major)+"."+to_string(minor);
+	return to_string(int(major)+1)+"."+to_string(minor);
 }
 
 
