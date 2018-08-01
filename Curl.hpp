@@ -34,7 +34,7 @@ public:
     Curl(Curl&&);
     Curl(OutputStream&);
     ~Curl();
-    void setURL(const std::string&);
+    void setURL(const char*);
     void fetch();
 };
 

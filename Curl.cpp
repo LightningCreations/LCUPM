@@ -35,8 +35,8 @@ Curl::Curl(OutputStream& target):writeTo(&target){
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeF);
 }
 
-void Curl::setURL(const std::string& url){
-    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+void Curl::setURL(const char* url){
+    curl_easy_setopt(curl, CURLOPT_URL,url);
 }
 
 void Curl::fetch(){
