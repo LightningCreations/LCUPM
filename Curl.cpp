@@ -33,6 +33,7 @@ Curl::Curl(OutputStream& target):writeTo(&target){
         throw CurlException("Curl Raised Error (Curl::{ctor})");
     curl_easy_setopt(curl,CURLOPT_WRITEDATA,writeTo);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeF);
+    curl_easy_setopt(curl,CURLOPT_ERRORBUFFER,this->buff);
 }
 
 void Curl::setURL(const char* url){
@@ -41,7 +42,7 @@ void Curl::setURL(const char* url){
 
 void Curl::fetch(){
     if(curl_easy_perform(curl)!=0)
-        throw CurlException("Curl Raised Error (Curl::fetch)");
+        throw CurlException("Curl Raised Error (Curl::fetch): "s+buff);
 }
 
 const char* CurlException::what()const noexcept(true){

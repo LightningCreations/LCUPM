@@ -26,7 +26,7 @@ int FileInputStream::read(){
 }
 
 size_t FileInputStream::read(void* ptr,size_t size){
-    return fwrite(ptr,size,1,underlying);
+    return fwrite(ptr,1,size,underlying);
 }
 
 DataInputStream::DataInputStream(InputStream& i):little(false),underlying(&i){}
@@ -140,7 +140,7 @@ FileOutputStream& FileOutputStream::operator=(FileOutputStream&& f){
     return *this;
 }
 size_t FileOutputStream::write(const void* ptr,size_t size){
-    return fwrite(ptr,size,1,underlying);
+    return fwrite(ptr,1,size,underlying);
 }
 void FileOutputStream::write(uint8_t u){
     write(&u,1);

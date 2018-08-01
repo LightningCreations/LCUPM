@@ -27,6 +27,7 @@ class Curl{
 private:
     OutputStream* writeTo;
     CURL* curl;
+    char buff[CURL_ERROR_SIZE];
     Curl(const Curl&)=delete;
     Curl& operator=(const Curl&)=delete;
     Curl& operator=(Curl&&)=delete;
