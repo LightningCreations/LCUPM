@@ -6,15 +6,16 @@ SOURCEFILES += Version.cpp JTime.cpp SHA256.cpp StringHelper.cpp
 SOURCEFILES += Errors.cpp IOWrapper.cpp Curl.cpp
 
 LIBCURL := curl
+LIBOPENSSL := ssl
 
 CURLINCLUDE := ./curl-master/include
 
-INCLUDEDIRS := -I./ -I$(CURLINCLUDE)
-LINKERFILES := -l$(LIBCURL)
+INCLUDEDIRS := -I./ -I$(CURLINCLUDE) -I/usr/include
+LINKERFILES := -l$(LIBCURL) -l$(LIBOPENSSL)
 
-PRGARGS := fetch http://horton.com/consulting/portfolio/dwbt/bouncer/media/sample.wav
+PRGARGS := fetch https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3
 
-FLAGS := -g  -fpermissive
+FLAGS := -g  -fpermissive -O3
 
 all: lcupm
 

@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
 		printf("by InfernoDeity and Rdrpenguin\n");
 		printf("Version 1.0\n");
 		*/
-		t.print(foreground<Color::GREEN>)
+		t.print(foreground<Color::GREEN>,background<Color::DARK_RED>)
 		.print("Lighting Creations Unified Package Manager",endline)
 		.print(Color::Reset)
 		.print("by InfernoDeity and Rdrpenguin",endline)
@@ -106,7 +106,7 @@ int main(int argc, char** argv) {
 		} else if(strcmp("help", argv[1]) == 0) {
 			help(t,argv[0]);
 		}
-		t.wait().clear();
+		t.print("Press any key to exit>",endline).wait().clear();
 	}catch(exit_program e){
 		return e.getCode();
 	}
